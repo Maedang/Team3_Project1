@@ -1,4 +1,4 @@
-# Team3_Project1
+# Team 3 (Project 1)
 
 As data science students, many of us are interested in transitioning into a career in data science or furthering our current careers in data science. Our topic explores the demographics of careers in data science at both entry and senior levels. We utilized several datasets to help us answer eight questions that provide valuable insights into the field of data science and benefit our class as a whole.
 
