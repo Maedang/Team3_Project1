@@ -54,6 +54,8 @@ There are many roles in data science, so we wanted to find the top ten highest p
 
 Key takeaways:
 
-•	There is currently a high demand for data scientists, which is creating many job opportunities across the United States.
-•	Remote and hybrid work environments are becoming more common for data scientists. 
-•	As data scientists gain more experience and expertise, there is a high ceiling for potential earnings.
+There is currently a high demand for data scientists, which is creating many job opportunities across the United States.
+
+Remote and hybrid work environments are becoming more common for data scientists. 
+
+As data scientists gain more experience and expertise, there is a high ceiling for potential earnings.
