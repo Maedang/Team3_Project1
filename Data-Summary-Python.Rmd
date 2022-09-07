@@ -1,0 +1,260 @@
+---
+title: "Data Summary (Project1 Python)"
+author: "Xenia Liu"
+date: "2022-09-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(kableExtra)
+library(DiagrammeR)
+library(tidyverse)
+library(kableExtra)
+library(reticulate)
+library(gt)
+
+# import the python programming
+Sys.setenv(RETICULATE_PYTHON = "/opt/anaconda3/bin/python")
+RETICULATE_PYTHON="/opt/anaconda3/bin/python"
+```
+
+
+```{r diagram2, message = FALSE, warning=FALSE, echo=FALSE, fig.width = 12, fig.height = 24}
+grViz(diagram = "digraph flowchart {
+      # define node aesthetics
+      node [fontname = Arial, shape = oval, color = grey, fontsize = 30,fixedsize = false,width = 2,height  = 2]
+      ranksep = 2;
+      nodesep=1.5;
+      tab1 [label = '@@1']
+      tab2 [label = '@@2']
+      tab3 [label = '@@3']
+      tab4 [label = '@@4']
+      tab5 [label = '@@5']
+      
+      node [fontname = Arial, shape = box, color = grey, fontsize = 30, fixedsize = false, width = 2, height = 2]
+      ranksep = 2;
+      nodesep=1.5;
+      tab6 [label = '@@6']
+      tab7 [label = '@@7']
+      tab8 [label = '@@8']
+      tab9 [label = '@@9']
+      
+# set up node layout
+      tab1 -> tab2;
+      tab1 -> tab3;
+      tab1 -> tab4;
+      tab1 -> tab5;
+      
+      tab2 -> tab6;
+      tab3 -> tab7;
+      tab4 -> tab8;
+      tab5 -> tab9;
+      
+      }
+[1]: 'Data Science Datasets Summary (After Cleaning)'
+      [2]: 'Dataset 1 \\n Data Science Job Salary'
+      [3]: 'Dataset 2'
+      [4]: 'Dataset 3 \\n Data Science and STEM Salary'
+      [5]: 'Dataset 4 \\n 2018 Kaggle Machine Learning & Data Science Survey'
+           [6]: 'Rows: 603 \\n Columns: 13 \\n Variables Used: Work Year, Experience Level, Salary, and Remote Ratio \\n Goals: 1. How does the experience level of a data scientist impact their salary? \\n 2. Is remote work more common for entry level or senior level data scientists?'
+           [7]: '?? '
+           [8]: 'Rows 62637 \\n Columns: 6 \\n Variables Used: Location and Total Yearly Compensation \\n Goals: What areas have the most demand for data scientists? \\n 2. What areas have the highest salaries for data scientists?'
+           [9]: 'Rows 11174 \\n Columns: 15 \\n Variables Used: What programming language would you recommend an aspiring data scientist to learn first? \\n Goals: What is the most commonly used programming language for data science?'
+      ")
+
+```
+
+
+
+
+```{python}
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+# load in csv
+datascience_df = pd.read_csv("./data/ds_salaries.csv")
+salary_in_usd = pd.DataFrame(datascience_df.describe()["salary_in_usd"],)
+salary_in_usd = salary_in_usd.rename(columns = {"salary_in_usd" : "Salary"})
+salary_in_usd
+
+
+```
+
+
+### Dataset 1 
+
+```{r}
+results = matrix(rep(0),nrow = 7, ncol = 1)
+colnames(results) = "Salary"
+rownames(results) = c("Mean","Standard Deviation","Minimum","25% Qualtile","50% Qualtile", "70% Qualtile","Maximum")
+
+results[1,1] = 112298
+results[2,1] = 70957
+results[3,1] = 2859
+results[4,1] = 62726
+results[5,1] = 101570
+results[6,1] = 150000
+results[7,1] = 600000
+
+# results %>% 
+#   gt() %>% 
+#    cols_label(
+#      Salary = "Salary ($)"
+#      ) %>% 
+#   tab_header(
+#     title = md("**Salary Statistic Summary**"))
+#     #subtitle = "2007-2009"
+#     
+
+results  %>%
+  kbl(caption = "") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+```
+
+
+
+### Dataset 2
+```{python}
+Fyi_Salary = pd.read_csv("./data/Levels_Fyi_Salary_Data.csv")
+new_Fyi_Salary = Fyi_Salary[['company','title','totalyearlycompensation','location','yearsatcompany','basesalary',]]
+new_Fyi_Salary = new_Fyi_Salary.dropna(how = 'any')
+cities = new_Fyi_Salary["location"].unique()
+new_Fyi_Salary_citygroup = new_Fyi_Salary.groupby('location')
+count = new_Fyi_Salary_citygroup["company"].count()
+average_comp = new_Fyi_Salary_citygroup["totalyearlycompensation"].mean()
+marker_df = pd.read_csv("./data/marker_df1.csv")
+# merge the data 
+merge_df = pd.merge(marker_df,count, on = "location")
+merge_df = merge_df.rename(columns = {'company':'count'})  
+
+group_count = []
+for item in merge_df["count"]:  
+# group the count data 
+    if item < 5:
+        group_count.append("count < 5")
+    elif item < 10:
+        group_count.append("count < 10")
+    elif item < 50:
+        group_count.append("count < 50")
+    else: 
+        group_count.append("count > 100")
+
+merge_df["group count"] = group_count
+merge_df['group count'].value_counts()
+
+# def select_marker_color(row):
+#     if row['group count'] == "count < 5":
+#         return'lightblue'
+#     elif row['group count'] == "count < 10":
+#         return 'blue'
+#     elif row['group count'] == "count < 50":
+#         return 'darkblue'
+#     return 'black'
+# merge_df['color'] = merge_df.apply(select_marker_color,axis =1)
+
+
+```
+
+```{r}
+results2 = matrix(rep(0),nrow = 4, ncol = 2)
+colnames(results2) = c("Total Locations","Color")
+rownames(results2) = c("Count < 5"," 5 <= Count < 10","10 <= Count < 50","Others")
+results2
+results2[1,1] = 667
+results2[2,1] = 143
+results2[3,1] = 135
+results2[4,1] = 105
+results2[1,2] = "Light Blue"
+results2[2,2] = "Blue"
+results2[3,2] = "Dark Blue"
+results2[4,2] = "Black"
+
+results2  %>%
+  kbl(caption = "") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+```
+
+
+```{python}
+# merge the data 
+merge_df = pd.merge(marker_df,average_comp, on = "location")
+merge_df = merge_df.rename(columns = {'totalyearlycompensation':'average yearly compensation'})  
+merge_df['average yearly compensation'].describe().to_frame()
+
+```
+
+
+```{r}
+results3 = matrix(rep(0),nrow = 7, ncol = 1)
+colnames(results3) = "Average Yearly Compensation"
+rownames(results) = c("Mean","Standard Deviation","Minimum","25% Quantile","50% Quantile", "70% Quantile","Maximum")
+
+results3[1,1] = 131689
+results3[2,1] = 71177
+results3[3,1] = 10000
+results3[4,1] = 87000
+results3[5,1] = 121000
+results3[6,1] = 158250
+results3[7,1] = 650000
+
+results3  %>%
+  kbl(caption = "") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+```
+
+```{python}
+survey_df = pd.read_csv("./data/multipleChoiceResponses.csv",low_memory=False) #,skiprows=1
+# select the variables 
+new_survey_df = survey_df[["Q1","Q2","Q4","Q5","Q6","Q6_OTHER_TEXT",
+                           "Q7","Q7_OTHER_TEXT","Q8","Q9","Q18","Q22",
+                          "Q23","Q24","Q25"]]
+new_survey_df.columns = new_survey_df.iloc[0] 
+new_survey_df = new_survey_df[1:]
+new_survey_df = new_survey_df.dropna(how = 'any')
+
+
+new_survey_df_group3 = new_survey_df.groupby("What programming language would you recommend an aspiring data scientist to learn first? - Selected Choice").count()
+new_survey_df_programming = pd.DataFrame(new_survey_df_group3)
+programing_counts = new_survey_df_programming["What is your gender? - Selected Choice"]
+programming_names = new_survey_df_programming.index.values
+
+programming_df = {'programing names':programming_names , 'programing counts': programing_counts}
+programming_df = pd.DataFrame(programming_df)
+programming_df
+
+```
+
+
+```{r}
+results4 = matrix(rep(0),nrow = 13, ncol = 1)
+colnames(results4) = "Programming Language Count"
+rownames(results4) = c("Python","R","SQL","C++","Other",
+                       "MatLab","Java","Scalar",
+                      "Javascrip","SAS","None","Go","VBA")
+
+results4[1,1] = 8744
+results4[2,1] = 1465
+results4[3,1] = 514
+results4[4,1] = 131
+results4[5,1] = 70
+results4[6,1] = 64
+results4[7,1] = 62
+results4[8,1] = 35
+results4[9,1] = 23
+results4[10,1] = 21
+results4[11,1] = 19
+results4[12,1] = 13
+results4[13,1] = 13
+
+
+
+results4  %>%
+  kbl(caption = "") %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+
+```
+
