@@ -52,3 +52,8 @@ Q8: What are the highest paying positions in data science?
 
 There are many roles in data science, so we wanted to find the top ten highest paying positions by job title and starting salary. The dataset that we used for this question consists of 10,971 data scientists that participated in a survey. In the previous questions, we determined that the average starting salary for an entry level data analyst is approximately $60,000 annually. This list includes two titles that have similar pay: Business Analyst and Data Analyst. These would be good roles to search for entry level applicants. Product/Project Manager is the highest on this list potentially starting at $90,000+. This would be a good role for an experienced data science professional to consider.   
 
+Key takeaways:
+
+•	There is currently a high demand for data scientists, which is creating many job opportunities across the United States.
+•	Remote and hybrid work environments are becoming more common for data scientists. 
+•	As data scientists gain more experience and expertise, there is a high ceiling for potential earnings.
